@@ -1,0 +1,345 @@
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* =========================
+   FUNDO
+========================= */
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+
+    background:
+        radial-gradient(circle at 15% 5%, rgba(163, 230, 53, .18), transparent 42%),
+        radial-gradient(circle at 85% 90%, rgba(34, 197, 94, .16), transparent 42%),
+        var(--color-bg);
+}
+
+/* =========================
+   HERO (Seção Principal)
+========================= */
+.hero {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 140px 40px 60px 40px;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: "\f57d";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: min(60vw, 760px);
+    line-height: 1;
+    color: var(--color-primary);
+    opacity: 0.07;
+    z-index: 0;
+    pointer-events: none;
+    animation: spinSlow 90s linear infinite;
+    transition: opacity 0.4s ease;
+}
+
+body.dark .hero::before {
+    opacity: 0.12;
+    color: var(--color-primary-light);
+}
+
+@keyframes spinSlow {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+/* =========================
+   LEFT CONTENT
+========================= */
+.left-content {
+    width: 100%;
+    color: var(--color-text);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.left-content > * {
+    animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.left-content h1 { animation-delay: 0.15s; }
+.left-content p { animation-delay: 0.25s; }
+.left-content .cards { animation-delay: 0.35s; }
+.left-content .hero-actions { animation-delay: 0.45s; }
+.left-content .hero-stats { animation-delay: 0.55s; }
+
+.left-content h1 {
+    font-size: clamp(42px, 6.5vw, 84px);
+    line-height: 1.05;
+    margin: 0 0 25px 0;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+}
+
+.left-content h1 span {
+    position: relative;
+    background: linear-gradient(135deg, var(--color-primary-vivid), var(--color-primary) 60%, var(--color-primary-dark));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.left-content p {
+    max-width: 700px;
+    font-size: 19px;
+    line-height: 32px;
+    margin-bottom: 45px;
+    color: var(--color-text-muted);
+}
+
+/* =========================
+   BOTÃO COM BRILHO PULSANTE
+========================= */
+.btn-glow {
+    position: relative;
+    animation: pulseGlow 2.6s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 12px 28px var(--color-primary-glow); }
+    50% { box-shadow: 0 12px 40px var(--color-primary-glow), 0 0 0 8px rgba(34, 197, 94, 0.12); }
+}
+
+/* =========================
+   CARDS
+========================= */
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 22px;
+    margin-bottom: 50px;
+}
+
+.card {
+    width: 220px;
+    padding: 28px 22px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(34, 197, 94, 0.35);
+    box-shadow: var(--shadow-lg);
+}
+
+.icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    font-size: 19px;
+    color: #ffffff;
+    background: var(--gradient-primary);
+    box-shadow: 0 8px 18px rgba(34, 197, 94, 0.3);
+    border-radius: 12px;
+}
+
+.card h4 {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+    color: var(--color-text);
+}
+
+.card p {
+    font-size: 13px;
+    line-height: 20px;
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+/* =========================
+   AÇÕES
+========================= */
+.hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* =========================
+   BOTÃO DE PERFIL (usuário logado)
+========================= */
+.nav-perfil-btn {
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: #ffffff !important;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    box-shadow: 0 8px 20px var(--color-primary-glow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.nav-perfil-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px var(--color-primary-glow);
+}
+
+/* =========================
+   MODAL DE AUTENTICAÇÃO
+========================= */
+.auth-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(11, 18, 32, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.auth-modal-overlay.visivel {
+    display: flex;
+}
+
+.auth-modal {
+    width: 100%;
+    max-width: 380px;
+    padding: 36px 32px;
+    text-align: center;
+    animation: authModalPop 0.25s ease;
+}
+
+.auth-modal-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.14);
+    color: var(--color-primary);
+    font-size: 22px;
+}
+
+.auth-modal h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 10px;
+}
+
+.auth-modal p {
+    color: var(--color-text-muted);
+    font-size: 14.5px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.auth-modal-actions .btn {
+    width: 100%;
+}
+
+@keyframes authModalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 992px) {
+    .left-content p { font-size: 18px; }
+}
+
+@media (max-width: 768px) {
+    .hero { padding: 120px 20px 40px; }
+    .left-content p { font-size: 16px; line-height: 26px; }
+    .card { width: 100%; max-width: 280px; }
+    .hero-actions { flex-direction: column; width: 100%; }
+    .hero-actions .btn { width: 100%; }
+    .hero-stats { flex-wrap: wrap; gap: 18px 26px; }
+    .hero-stats .stat-divider { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .left-content > *,
+    .hero::before,
+    .btn-glow {
+        animation: none !important;
+    }
+}

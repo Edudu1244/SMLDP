@@ -1,0 +1,227 @@
+/* =========================
+   RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.93), rgba(244, 250, 246, 0.96)),
+        url("img/fundo.jpg");
+    background-size: cover;
+    background-position: center 20%;
+    background-attachment: fixed;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease;
+}
+
+body.dark {
+    background:
+        linear-gradient(rgba(11, 18, 32, 0.88), rgba(15, 23, 42, 0.93)),
+        url("img/fundo.jpg");
+    background-size: cover;
+    background-position: center 20%;
+    background-attachment: fixed;
+}
+
+/* =========================
+   CONTAINER / CARD
+========================= */
+.cadastro {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.cadastro-box {
+    width: 100%;
+    max-width: 500px;
+    padding: 40px;
+    border-radius: 25px;
+    text-align: center;
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.logo {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #ffffff;
+    background: var(--gradient-primary, linear-gradient(135deg, #a3e635, #22c55e 60%, #15803d));
+    box-shadow: 0 10px 24px rgba(34, 197, 94, 0.3);
+    border-radius: 18px;
+}
+
+.cadastro-box h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: var(--color-text);
+}
+
+.cadastro-box p {
+    color: var(--color-text-muted);
+    margin-bottom: 25px;
+}
+
+/* =========================
+   INPUTS AND SELECTS
+========================= */
+.input-group {
+    text-align: left;
+    margin-bottom: 18px;
+}
+
+.input-row {
+    display: flex;
+    gap: 15px;
+}
+
+.input-row .input-group {
+    flex: 1;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-muted);
+}
+
+.input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrap i {
+    position: absolute;
+    left: 16px;
+    font-size: 14px;
+    color: var(--color-text-dim);
+    transition: color 0.3s ease;
+    pointer-events: none;
+}
+
+.input-wrap:focus-within i {
+    color: #22c55e;
+}
+
+.input-group input,
+.input-group select {
+    width: 100%;
+    padding: 14px 14px 14px 42px;
+    border: 1px solid var(--color-border);
+    outline: none;
+    border-radius: 12px;
+    background: var(--color-surface-alt);
+    color: var(--color-text);
+    font-size: 15px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+.input-group input::placeholder {
+    color: var(--color-text-dim);
+}
+
+.input-group select option {
+    color: var(--color-text);
+    background: var(--color-surface);
+}
+
+/* =========================
+   BUTTONS AND INTERACTION
+========================= */
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 16px;
+    background: var(--gradient-primary, linear-gradient(135deg, #a3e635, #22c55e 60%, #15803d));
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s ease;
+    box-shadow: 0 12px 28px rgba(34, 197, 94, 0.35);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.back-btn:hover {
+    color: #15803d;
+    transform: translateX(-5px);
+}
+
+.register-link {
+    margin-top: 25px;
+    color: var(--color-text-muted);
+}
+
+.register-link a {
+    color: #15803d;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #14532d;
+    text-decoration: underline;
+}
+
+#mensagem {
+    margin-top: 15px;
+    font-weight: 600;
+}
+
+/* =========================
+   RESPONSIVIDADE
+========================= */
+@media (max-width: 600px) {
+    .cadastro-box { padding: 30px 25px; }
+    .cadastro-box h1 { font-size: 28px; }
+    .input-row { flex-direction: column; gap: 0; }
+}
