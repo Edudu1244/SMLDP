@@ -18,7 +18,8 @@ const app = express();
 // 2. MIDDLEWARES GERAIS
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "../frontend")));
+// Aponta direto para a pasta frontend que agora está dentro de backend
+app.use(express.static(path.join(__dirname, "frontend")));
 
 // 2.1 UPLOAD DE FOTO DE PERFIL
 const uploadsDir = path.join(__dirname, "uploads");
@@ -52,9 +53,9 @@ const uploadFoto = multer({
 app.use("/auth", authRoutes); 
 app.use("/api", simulationRoutes);
 
-// 4. ROTA INICIAL (Carrega a página principal do TCC)
+// 4. ROTA INICIAL (Carrega a página principal do TCC de dentro de backend/frontend)
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend", "inicial.html"));
+    res.sendFile(path.join(__dirname, "frontend", "inicial.html"));
 });
 
 // 5. BANCO DE DADOS (Criação e população das tabelas dentro do serialize)
@@ -437,7 +438,7 @@ app.put("/api/perfil", verificarToken, (req, res) => {
                     idade: dataNascimento !== undefined ? idadeCalculadaDaData : (idade !== undefined ? Number(idade) : undefined),
                     dataNascimento: dataNascimento !== undefined ? dataNascimento : undefined,
                     sexo: sexo !== undefined ? sexo.trim() : undefined,
-                    username: username !== username ? username.trim() : undefined,
+                    username: username !== undefined ? username.trim() : undefined,
                     email: email !== undefined ? email.trim() : undefined
                 });
             });
@@ -477,9 +478,9 @@ app.post("/api/perfil/foto", verificarToken, (req, res) => {
 });
 
 // ==========================================
-// INICIANDO O SERVIDOR (Porta dinâmica do Railway)
+// INICIANDO O SERVIDOR (Porta 8080 para o Railway)
 // ==========================================
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`✅ Servidor rodando na porta ${PORT}`);
 });
