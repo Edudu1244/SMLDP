@@ -32,11 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         try {
-<<<<<<< HEAD
-            // 3. Faz a chamada AJAX (Fetch) usando rota relativa para o Railway
-=======
-            // 3. ALTERADO AQUI: Usando rota relativa para funcionar no Railway e local
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
+            // 3. Faz a chamada AJAX (Fetch) usando rota relativa para funcionar no Railway e local
             const response = await fetch("/api/simular", {
                 method: "POST",
                 headers: {

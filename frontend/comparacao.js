@@ -133,12 +133,8 @@ function registrarComparacao(pais1, pais2) {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-<<<<<<< HEAD
     // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
     fetch("/api/comparar", {
-=======
-    fetch("http://127.0.0.1:3000/api/comparar", {
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
         method: "POST",
         headers: {
             "Authorization": `Bearer ${token}`,

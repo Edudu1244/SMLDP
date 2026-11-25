@@ -42,15 +42,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==========================================================
     async function carregarPaisesCadastro() {
         try {
-            // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
+            // Rota relativa (Funciona perfeitamente no Railway e local)
             const response = await fetch("/api/paises");
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Limpa o select e define a opção padrão inicial
                 selectPais.innerHTML = '<option value="" disabled selected>Selecione seu país</option>';
                 
-                // Preenche com os países vindos do banco SQLite
                 data.paises.forEach(pais => {
                     const option = document.createElement("option");
                     option.value = pais.nome;
@@ -66,7 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Dispara a busca de países assim que a página abre
     carregarPaisesCadastro();
 
     // ==========================================================
@@ -81,12 +78,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 idade: Number(document.getElementById("idade").value), 
                 sexo: document.getElementById("sexo").value,
                 profissao: document.getElementById("profissao").value.trim(),
-                pais: selectPais.value, // Pega o país selecionado no select
+                pais: selectPais.value,
                 email: document.getElementById("email").value.trim(),
                 senha: document.getElementById("senha").value.trim()
             };
 
-            // Validações básicas de front-end
             if (
                 !dados.nome ||
                 !dados.idade ||
@@ -114,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             try {
-                // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
+                // Rota relativa para o cadastro (Railway e local)
                 const resposta = await fetch("/auth/register", {
                     method: "POST",
                     headers: {
@@ -126,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const data = await resposta.json();
 
                 if (data.success) {
-                    // 🌟 Salva o token e os dados gerados pelo controller no localStorage
                     if (data.token) {
                         localStorage.setItem("token", data.token);
                     }
@@ -134,7 +129,6 @@ document.addEventListener("DOMContentLoaded", () => {
                         localStorage.setItem("usuario", JSON.stringify(data.usuario));
                     }
                     
-                    // Exibe a mensagem de sucesso e aguarda 1.5s antes de mudar de página
                     mensagem.innerText = "Conta criada com sucesso! Redirecionando...";
                     mensagem.style.color = "#16a34a";
 
@@ -143,7 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     }, 1500);
 
                 } else {
-                    // Caso o backend recuse (ex: email já existe)
                     mensagem.innerText = data.message;
                     mensagem.style.color = "#dc2626";
                 }

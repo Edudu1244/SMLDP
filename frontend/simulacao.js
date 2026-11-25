@@ -44,13 +44,8 @@ async function buscarDados(event) {
       msgStatus.style.color = "#128a3e";
     }
 
-<<<<<<< HEAD
     // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
     const response = await fetch("/api/simular", {
-=======
-    // Envia os dados para o servidor
-    const response = await fetch("http://127.0.0.1:3000/api/simular", {
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -170,8 +165,4 @@ if (btnProsseguir) {
     localStorage.setItem("planoPaisEscolhido", paisDestinoSelect.value);
     window.location.href = "planeje.html";
   });
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616

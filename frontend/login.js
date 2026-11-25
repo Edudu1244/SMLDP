@@ -55,12 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
             setLoadingState(true);
 
             try {
-<<<<<<< HEAD
                 // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
                 const resposta = await fetch("/auth/login", {
-=======
-                const resposta = await fetch("http://127.0.0.1:3000/auth/login", {
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -178,12 +174,8 @@ document.addEventListener("DOMContentLoaded", () => {
         modalEsqueciSenhaErro.textContent = "";
 
         try {
-<<<<<<< HEAD
             // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
             const resposta = await fetch("/auth/esqueci-senha", {
-=======
-            const resposta = await fetch("http://127.0.0.1:3000/auth/esqueci-senha", {
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email })
@@ -196,11 +188,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 modalEsqueciSenhaErro.textContent = data.message;
                 btnEnviarRecuperacao.textContent = "Link enviado";
 
-<<<<<<< HEAD
-=======
-                // Sem e-mail configurado no servidor (ambiente de dev/demo), o backend manda
-                // o link direto na resposta em vez de por e-mail de verdade.
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
                 if (data.linkDev && linkRecuperacaoDev) {
                     linkRecuperacaoDev.href = data.linkDev;
                     linkRecuperacaoDev.style.display = "flex";

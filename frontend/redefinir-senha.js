@@ -1,90 +1,189 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const formRedefinirSenha = document.getElementById("formRedefinirSenha");
-    const mensagem = document.getElementById("mensagem");
-    const btnRedefinirSenha = document.getElementById("btnRedefinirSenha");
+const API_URL = ""; // 🌟 Alterado para rota relativa (funciona local e no Railway)
 
-    const parametros = new URLSearchParams(window.location.search);
-    const token = parametros.get("token");
+const nomeUsuario = document.getElementById("nomeUsuario");
+const token = localStorage.getItem("token");
+const userRaw = localStorage.getItem("usuario");
 
-    if (!token) {
-        exibirMensagem("Link inválido. Solicite uma nova redefinição na tela de login.", "erro");
-        if (formRedefinirSenha) formRedefinirSenha.style.display = "none";
+let usuario = null;
+if (userRaw) {
+    try {
+        usuario = JSON.parse(userRaw);
+    } catch (erroParse) {
+        console.warn("Dado de usuário inválido no localStorage, ignorando:", erroParse);
+    }
+}
+
+if (nomeUsuario) nomeUsuario.innerText = usuario && usuario.nome ? usuario.nome : "Visitante";
+
+if (!token) {
+    alert("🔒 Acesso negado! Por favor, faça login para acessar o planejamento.");
+    window.location.href = "login.html";
+}
+
+// O país vem da tela de Simulação (botão "Salvar"). Sem ele, não há o que planejar.
+const paisEscolhido = localStorage.getItem("planoPaisEscolhido");
+const estados = (paisEscolhido && typeof ESTADOS_POR_PAIS !== "undefined") ? ESTADOS_POR_PAIS[paisEscolhido] : null;
+
+if (!paisEscolhido || !estados) {
+    alert("Escolha um país na tela de Simulação antes de planejar a mudança.");
+    window.location.href = "simulacao.html";
+}
+
+const paisAtualNome = document.getElementById("paisAtualNome");
+if (paisAtualNome && estados) {
+    const bandeira = (typeof BANDEIRA_POR_PAIS !== "undefined" && BANDEIRA_POR_PAIS[paisEscolhido]) || "";
+    paisAtualNome.textContent = `${bandeira} ${paisEscolhido}`;
+}
+
+const estadosGrid = document.getElementById("estadosGrid");
+const grupoCidades = document.getElementById("grupoCidades");
+const cidadesGrid = document.getElementById("cidadesGrid");
+const inputPlanoEstado = document.getElementById("planoEstado");
+const inputPlanoCidade = document.getElementById("planoCidade");
+
+function renderizarListaPontos(pontos, classe, icone) {
+    return `<ul class="pontos-lista ${classe}">${pontos.map(p => `<li>${icone} ${p}</li>`).join("")}</ul>`;
+}
+
+function marcarEstadoSelecionado(nomeEstado) {
+    inputPlanoEstado.value = nomeEstado;
+    estadosGrid.querySelectorAll(".estado-card-forte").forEach(card => {
+        card.classList.toggle("selecionado", card.dataset.estado === nomeEstado);
+    });
+}
+
+// Clique no estado: marca o estado e (re)monta a lista de cidades dele do zero,
+// já que trocar de estado significa trocar as opções de cidade também.
+function selecionarEstado(nomeEstado) {
+    marcarEstadoSelecionado(nomeEstado);
+    inputPlanoCidade.value = "";
+
+    const estado = estados.find(e => e.nome === nomeEstado);
+    if (estado) renderizarCidades(estado);
+}
+
+function renderizarEstados() {
+    if (!estadosGrid || !estados) return;
+
+    estadosGrid.innerHTML = estados.map(estado => `
+        <button type="button" class="estado-card-forte" data-estado="${estado.nome}">
+            <div class="estado-card-forte-nome">${estado.nome}</div>
+            <div class="estado-card-stats">
+                <span class="estado-card-stat">💰 Economia ${estado.economia}/10</span>
+                <span class="estado-card-stat">🏥 Saúde ${estado.saude}/10</span>
+                <span class="estado-card-stat">💼 Empregos ${estado.empregos}/10</span>
+            </div>
+            ${renderizarListaPontos(estado.pontosFortes, "pontos-fortes", "✅")}
+            ${renderizarListaPontos(estado.pontosFracos, "pontos-fracos", "⚠️")}
+        </button>
+    `).join("");
+
+    estadosGrid.querySelectorAll(".estado-card-forte").forEach(card => {
+        card.addEventListener("click", () => selecionarEstado(card.dataset.estado));
+    });
+}
+
+function renderizarCidades(estado) {
+    if (!cidadesGrid || !grupoCidades) return;
+
+    grupoCidades.style.display = "block";
+
+    cidadesGrid.innerHTML = estado.cidades.map(cidade => `
+        <button type="button" class="cidade-card-forte" data-cidade="${cidade.nome}">
+            <div class="cidade-card-img cidade-card-img-placeholder" data-cidade="${cidade.nome}"><i class="fa-solid fa-city"></i></div>
+            <div class="cidade-card-forte-corpo">
+                <div class="cidade-card-forte-topo">
+                    <span class="cidade-card-forte-nome">${cidade.nome}</span>
+                </div>
+                ${renderizarListaPontos([cidade.forte], "pontos-fortes", "✅")}
+                ${renderizarListaPontos([cidade.fraco], "pontos-fracos", "⚠️")}
+            </div>
+        </button>
+    `).join("");
+
+    cidadesGrid.querySelectorAll(".cidade-card-forte").forEach(card => {
+        card.addEventListener("click", () => {
+            inputPlanoCidade.value = card.dataset.cidade;
+            cidadesGrid.querySelectorAll(".cidade-card-forte").forEach(c => c.classList.remove("selecionado"));
+            card.classList.add("selecionado");
+        });
+
+        // Busca a foto da cidade em segundo plano, sem travar a exibição dos cards
+        if (typeof buscarImagemCidade === "function") {
+            buscarImagemCidade(card.dataset.cidade).then(url => {
+                if (!url) return;
+                const placeholder = card.querySelector(".cidade-card-img-placeholder");
+                if (!placeholder) return;
+                const img = document.createElement("img");
+                img.src = url;
+                img.alt = `Foto de ${card.dataset.cidade}`;
+                img.loading = "lazy";
+                img.className = "cidade-card-img";
+                placeholder.replaceWith(img);
+            });
+        }
+    });
+}
+
+if (estados) {
+    renderizarEstados();
+}
+
+async function salvarPlano() {
+    const msgPlano = document.getElementById("msgPlano");
+
+    const estado = inputPlanoEstado.value.trim();
+    const cidade = inputPlanoCidade.value.trim();
+    const dataPretendida = document.getElementById("planoData").value;
+    const quantidadePessoas = document.getElementById("planoPessoas").value;
+    const valorGuardado = document.getElementById("planoValorGuardado").value;
+
+    if (!estado || !cidade || !dataPretendida || !quantidadePessoas || !valorGuardado) {
+        if (msgPlano) {
+            msgPlano.innerText = "Escolha um estado, uma cidade e preencha os detalhes do plano.";
+            msgPlano.style.color = "#dc2626";
+        }
         return;
     }
 
-    if (formRedefinirSenha) {
-        formRedefinirSenha.addEventListener("submit", async (evento) => {
-            evento.preventDefault();
-
-            const novaSenha = document.getElementById("novaSenha").value.trim();
-            const confirmarSenha = document.getElementById("confirmarSenha").value.trim();
-
-            if (novaSenha.length < 6) {
-                exibirMensagem("A senha deve ter no mínimo 6 caracteres.", "erro");
-                return;
-            }
-
-            if (novaSenha !== confirmarSenha) {
-                exibirMensagem("As senhas não coincidem.", "erro");
-                return;
-            }
-
-            setLoadingState(true);
-
-            try {
-<<<<<<< HEAD
-                // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
-                const resposta = await fetch("/auth/redefinir-senha", {
-=======
-                const resposta = await fetch("http://127.0.0.1:3000/auth/redefinir-senha", {
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token, novaSenha })
-                });
-
-                const data = await resposta.json();
-
-                if (data.success) {
-                    exibirMensagem("Senha redefinida com sucesso! Redirecionando para o login...", "sucesso");
-                    setTimeout(() => {
-                        window.location.href = "login.html";
-                    }, 1800);
-                } else {
-                    exibirMensagem(data.message || "Não foi possível redefinir a senha.", "erro");
-                    setLoadingState(false);
-                }
-            } catch (erro) {
-                console.error("Erro ao redefinir senha:", erro);
-                exibirMensagem("Não foi possível conectar ao servidor.", "erro");
-                setLoadingState(false);
-            }
+    try {
+        const response = await fetch(`${API_URL}/api/plano`, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                paisDestino: paisEscolhido,
+                estado,
+                cidade,
+                dataPretendida,
+                quantidadePessoas,
+                valorGuardado,
+            }),
         });
-    }
 
-    function exibirMensagem(texto, tipo) {
-        mensagem.innerText = texto;
-        mensagem.style.color = tipo === "sucesso" ? "#16a34a" : "#dc2626";
-    }
+        const data = await response.json();
 
-    function setLoadingState(isLoading) {
-        if (!btnRedefinirSenha) return;
-
-        if (isLoading) {
-            btnRedefinirSenha.disabled = true;
-            btnRedefinirSenha.dataset.textoOriginal = btnRedefinirSenha.innerText;
-            btnRedefinirSenha.innerText = "Salvando...";
-            btnRedefinirSenha.style.opacity = "0.7";
-            btnRedefinirSenha.style.cursor = "not-allowed";
-        } else {
-            btnRedefinirSenha.disabled = false;
-            btnRedefinirSenha.innerText = btnRedefinirSenha.dataset.textoOriginal || "Redefinir senha";
-            btnRedefinirSenha.style.opacity = "1";
-            btnRedefinirSenha.style.cursor = "pointer";
+        if (msgPlano) {
+            if (data.success) {
+                msgPlano.innerText = "✅ Alterações salvas com sucesso!";
+                msgPlano.style.color = "#16a34a";
+            } else {
+                msgPlano.innerText = data.message || "Não foi possível salvar o plano.";
+                msgPlano.style.color = "#dc2626";
+            }
+        }
+    } catch (erro) {
+        console.error("Erro ao salvar plano:", erro);
+        if (msgPlano) {
+            msgPlano.innerText = "Não foi possível conectar ao servidor backend.";
+            msgPlano.style.color = "#dc2626";
         }
     }
-<<<<<<< HEAD
-});
-=======
-});
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
+}
+
+const btnSalvarPlano = document.getElementById("btnSalvarPlano");
+if (btnSalvarPlano) {
+    btnSalvarPlano.addEventListener("click", salvarPlano);
+}

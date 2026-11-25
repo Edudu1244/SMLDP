@@ -14,19 +14,11 @@ const simulationRoutes = require("./routes/simulationRoutes");
 const verificarToken = require("./middleware/authMiddleware");
 
 const app = express();
-<<<<<<< HEAD
-const PORT = 3000;
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
 
 // 2. MIDDLEWARES GERAIS
 app.use(cors());
 app.use(express.json());
-<<<<<<< HEAD
 app.use(express.static(path.join(__dirname, "../frontend")));
-=======
-app.use(express.static(path.join(__dirname, "frontend")));
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
 
 // 2.1 UPLOAD DE FOTO DE PERFIL
 const uploadsDir = path.join(__dirname, "uploads");
@@ -60,19 +52,9 @@ const uploadFoto = multer({
 app.use("/auth", authRoutes); 
 app.use("/api", simulationRoutes);
 
-<<<<<<< HEAD
-/* 4. ROTA INICIAL DE TESTE
-app.get("/", (req, res) => {
-    res.send("🚀 Servidor funcionando!");
-}); */
 // 4. ROTA INICIAL (Carrega a página principal do TCC)
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "inicial.html"));
-=======
-// 4. ROTA INICIAL (Carrega a página principal do TCC)
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "frontend", "inicial.html"));
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
 });
 
 // 5. BANCO DE DADOS (Criação e população das tabelas dentro do serialize)
@@ -111,11 +93,6 @@ db.serialize(() => {
             };
 
             if (!nomesColunas.includes("username")) {
-<<<<<<< HEAD
-                // O índice só pode ser criado depois que a coluna existir de verdade —
-                // por isso fica dentro deste callback, e não solto ao lado do ALTER TABLE.
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
                 db.run("ALTER TABLE users ADD COLUMN username TEXT", (errAlter) => {
                     if (errAlter) {
                         console.error("💥 Erro ao adicionar coluna 'username':", errAlter.message);
@@ -181,10 +158,6 @@ db.serialize(() => {
             clima TEXT
         )
     `, () => {
-<<<<<<< HEAD
-        // Dados de referência dos países (indice_desenvolvimento = IDH real, escala 0 a 1)
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
         const dadosPaises = {
             "Estados Unidos":  { idh: 0.921, qualidade: 8, dificuldade: 8, salario_medio: 5500, moeda: "USD", idioma: "Inglês", dificuldade_idioma: "Médio", clima: "Variado" },
             "China":           { idh: 0.788, qualidade: 6, dificuldade: 8, salario_medio: 2200, moeda: "CNY", idioma: "Mandarim", dificuldade_idioma: "Muito Difícil", clima: "Variado (subtropical a continental)" },
@@ -195,20 +168,11 @@ db.serialize(() => {
             "Suíça":           { idh: 0.967, qualidade: 10, dificuldade: 7, salario_medio: 8500, moeda: "CHF", idioma: "Alemão, Francês e Italiano", dificuldade_idioma: "Difícil", clima: "Alpino/Temperado" }
         };
 
-<<<<<<< HEAD
-        // Remove países de uma lista antiga do projeto que não fazem mais parte
-        // do conjunto de destinos suportados pelas simulações.
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
         const placeholders = Object.keys(dadosPaises).map(() => "?").join(", ");
         db.run(`DELETE FROM countries WHERE nome NOT IN (${placeholders})`, Object.keys(dadosPaises), (errDelete) => {
             if (!errDelete) console.log("ℹ️ Países fora da lista atual removidos da tabela countries.");
         });
 
-<<<<<<< HEAD
-        // Migração: adiciona colunas novas em bancos já criados numa versão anterior do schema
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
         db.all("PRAGMA table_info(countries)", (err, colunas) => {
             if (err) return;
 
@@ -230,10 +194,6 @@ db.serialize(() => {
                 }
             });
 
-<<<<<<< HEAD
-            // Preenche países já cadastrados (de um banco antigo) que ainda não têm esses dados
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
             const atualizaStmt = db.prepare(`
                 UPDATE countries
                 SET indice_desenvolvimento = ?, salario_medio = ?, moeda = ?, idioma = ?, dificuldade_idioma = ?, clima = ?
@@ -245,10 +205,6 @@ db.serialize(() => {
             atualizaStmt.finalize();
         });
 
-<<<<<<< HEAD
-        // INSERT OR IGNORE: popula países que ainda não existem, sem duplicar os que já foram cadastrados antes
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
         const stmt = db.prepare(`
             INSERT OR IGNORE INTO countries
                 (nome, indice_desenvolvimento, qualidade_vida, dificuldade, salario_medio, moeda, idioma, dificuldade_idioma, clima)
@@ -262,10 +218,6 @@ db.serialize(() => {
         });
     });
 
-<<<<<<< HEAD
-    // Tabela de Histórico de Simulações
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     db.run(`
         CREATE TABLE IF NOT EXISTS simulations (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -281,10 +233,6 @@ db.serialize(() => {
         )
     `);
 
-<<<<<<< HEAD
-    // Tabela de Histórico de Comparações
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     db.run(`
         CREATE TABLE IF NOT EXISTS comparisons (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -296,10 +244,6 @@ db.serialize(() => {
         )
     `);
 
-<<<<<<< HEAD
-    // Tabela de Países Favoritos
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     db.run(`
         CREATE TABLE IF NOT EXISTS favorites (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -311,10 +255,6 @@ db.serialize(() => {
         )
     `);
 
-<<<<<<< HEAD
-    // Tabela de Planos de Mudança ("Planeje sua Mudança", na tela de Simulação)
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     db.run(`
         CREATE TABLE IF NOT EXISTS planos (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -330,10 +270,6 @@ db.serialize(() => {
         )
     `);
 
-<<<<<<< HEAD
-    // Tabela de Histórico do Valor Economizado (dashboard do Perfil)
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     db.run(`
         CREATE TABLE IF NOT EXISTS economia_historico (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -344,10 +280,6 @@ db.serialize(() => {
         )
     `);
 
-<<<<<<< HEAD
-    // Tabela do Checklist de Progresso da Mudança (dashboard do Perfil)
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     db.run(`
         CREATE TABLE IF NOT EXISTS user_progresso (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -360,10 +292,6 @@ db.serialize(() => {
     `);
 });
 
-<<<<<<< HEAD
-// Calcula a idade em anos completos a partir de uma data de nascimento "YYYY-MM-DD"
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
 function calcularIdadeAPartirDeNascimento(dataNascimento) {
     const nascimento = new Date(`${dataNascimento}T00:00:00`);
     if (isNaN(nascimento.getTime())) return NaN;
@@ -461,11 +389,6 @@ app.put("/api/perfil", verificarToken, (req, res) => {
         return res.status(400).json({ success: false, message: "Nenhum dado para atualizar." });
     }
 
-<<<<<<< HEAD
-    // Usuário e e-mail precisam ser únicos, então checamos duplicidade
-    // antes do UPDATE (mesmo padrão de verificação usado no cadastro).
-=======
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
     const verificarUsernameDuplicado = (callback) => {
         if (username === undefined) return callback(null);
         db.get("SELECT id FROM users WHERE username = ? AND id != ?", [username.trim(), userId], (err, row) => {
@@ -514,7 +437,7 @@ app.put("/api/perfil", verificarToken, (req, res) => {
                     idade: dataNascimento !== undefined ? idadeCalculadaDaData : (idade !== undefined ? Number(idade) : undefined),
                     dataNascimento: dataNascimento !== undefined ? dataNascimento : undefined,
                     sexo: sexo !== undefined ? sexo.trim() : undefined,
-                    username: username !== undefined ? username.trim() : undefined,
+                    username: username !== username ? username.trim() : undefined,
                     email: email !== undefined ? email.trim() : undefined
                 });
             });
@@ -530,11 +453,7 @@ app.post("/api/perfil/foto", verificarToken, (req, res) => {
 
         if (!req.file) {
             return res.status(400).json({ success: false, message: "Nenhuma imagem enviada." });
-<<<<<<< HEAD
         }
-=======
-            }
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
 
         const userId = req.usuarioLogado.id || req.usuarioLogado.userId || req.usuarioLogado.user_id;
         const caminhoFoto = `/uploads/${req.file.filename}`;
@@ -556,16 +475,11 @@ app.post("/api/perfil/foto", verificarToken, (req, res) => {
         });
     });
 });
-<<<<<<< HEAD
 
 // ==========================================
-// INICIANDO O SERVIDOR (Versão Ajustada para o Railway)
-=======
+// INICIANDO O SERVIDOR (Porta dinâmica do Railway)
 // ==========================================
-// INICIANDO O SERVIDOR
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
-// ==========================================
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`✅ Servidor rodando na porta ${PORT}`);
 });

@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 const API_URL = ""; // 🌟 Alterado para rota relativa (funciona local e no Railway)
-=======
-const API_URL = "http://127.0.0.1:3000";
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
 
 const nomeUsuario = document.getElementById("nomeUsuario");
 const token = localStorage.getItem("token");
@@ -190,8 +186,4 @@ async function salvarPlano() {
 const btnSalvarPlano = document.getElementById("btnSalvarPlano");
 if (btnSalvarPlano) {
     btnSalvarPlano.addEventListener("click", salvarPlano);
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616

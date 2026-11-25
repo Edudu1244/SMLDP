@@ -244,12 +244,8 @@ function sincronizarResultadoComServidor(melhor) {
 
     clearTimeout(sincronizarResultadoTimeout);
     sincronizarResultadoTimeout = setTimeout(() => {
-<<<<<<< HEAD
         // 🌟 ALTERADO PARA ROTA RELATIVA (Funciona no Railway e local)
         fetch("/api/pais-ideal", {
-=======
-        fetch("http://127.0.0.1:3000/api/pais-ideal", {
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
             method: "POST",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -336,8 +332,4 @@ window.addEventListener("scroll", () => {
 window.onload = () => {
     carregarPesosSalvos();
     calcularRanking();
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> c743ba28d916a79ea34c377f1e528970ed450616
